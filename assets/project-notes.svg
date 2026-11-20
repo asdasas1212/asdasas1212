@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="250" viewBox="0 0 720 250" role="img" aria-label="kx-public-notes">
+<defs><radialGradient id="g"><stop stop-color="#3df5a7" stop-opacity=".1"/><stop offset="1" stop-color="#3df5a7" stop-opacity="0"/></radialGradient></defs>
+<rect x=".5" y=".5" width="719" height="249" rx="16" fill="#091217" stroke="#24383b"/>
+<ellipse cx="645" cy="30" rx="230" ry="180" fill="url(#g)"/>
+<g font-family="Arial, sans-serif">
+<text x="30" y="50" fill="#3df5a7" font-size="17">AI, data &amp; robotics</text>
+<text x="30" y="103" fill="#eaf4f0" font-size="35" font-weight="700">kx-public-notes</text>
+<text x="30" y="149" fill="#a4bcb3" font-size="20">Learning in public, one note at a time.</text>
+<text x="30" y="211" fill="#6c8a80" font-family="monospace" font-size="16">/notes</text>
+<path d="M654 194h23m-10-10 10 10-10 10" stroke="#3df5a7" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg>
