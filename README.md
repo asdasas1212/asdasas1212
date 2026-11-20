@@ -1,14 +1,18 @@
 <div align="center">
 
 <a href="https://asdasas1212.github.io/asdasas1212/">
-<img src="./assets/profile-hero.svg" width="100%" alt="hkx / asdasas1212 — See. Think. Move. Robotics, vision-language models and navigation. Animated detection boxes and terminal typing.">
+<img src="./assets/profile-showcase.svg" width="100%" alt="hkx / asdasas1212 — See. Think. Move. 自动循环展示感知场景、理解杯子目标、规划路径与机器人移动。预设场景示意，无需点击即可观看。">
 </a>
 
 **让机器人看懂世界，再走向世界。**
 
 Robotics · Vision-Language Models · Visual Navigation
 
-[进入交互主页](https://asdasas1212.github.io/asdasas1212/) &nbsp; / &nbsp; [浏览公开项目](https://github.com/asdasas1212?tab=repositories&type=source) &nbsp; / &nbsp; [阅读公开笔记](https://github.com/asdasas1212/kx-public-notes)
+感知 → 理解 → 规划 → 行动，打开主页即可观看上方的循环演示。
+
+<sub>预设场景示意 · 每 18 秒循环</sub>
+
+[浏览公开项目](https://github.com/asdasas1212?tab=repositories&type=source) &nbsp; / &nbsp; [阅读公开笔记](https://github.com/asdasas1212/kx-public-notes)
 
 </div>
 
@@ -61,11 +65,12 @@ $ cat focus.txt
 
 **See the world. Understand the world. Move through it.**
 
-[交互主页](https://asdasas1212.github.io/asdasas1212/) · [GitHub](https://github.com/asdasas1212)
+[手动切换步骤与体验鼠标互动](https://asdasas1212.github.io/asdasas1212/) · [GitHub](https://github.com/asdasas1212)
 
 </div>
 
 <!-- Maintenance: assets/generate_profile.py rebuilds local artwork with Pillow + NumPy.
-     The animated SVG banner is self-hosted and respects reduced motion.
+     profile-showcase.svg is a hand-authored, self-contained animated SVG.
+     The animated SVG showcase is self-hosted and includes a reduced-motion layout.
      index.html is the standalone GitHub Pages site.
      The Pages demo is an illustrative replay, not real-time model inference. -->
