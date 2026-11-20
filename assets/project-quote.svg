@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="250" viewBox="0 0 720 250" role="img" aria-label="quote-skill">
+<defs><radialGradient id="g"><stop stop-color="#ffc94d" stop-opacity=".1"/><stop offset="1" stop-color="#ffc94d" stop-opacity="0"/></radialGradient></defs>
+<rect x=".5" y=".5" width="719" height="249" rx="16" fill="#091217" stroke="#24383b"/>
+<ellipse cx="645" cy="30" rx="230" ry="180" fill="url(#g)"/>
+<g font-family="Arial, sans-serif">
+<text x="30" y="50" fill="#ffc94d" font-size="17">JavaScript</text>
+<text x="30" y="103" fill="#eaf4f0" font-size="35" font-weight="700">quote-skill</text>
+<text x="30" y="149" fill="#a4bcb3" font-size="20">A public skill project, built with code.</text>
+<text x="30" y="211" fill="#6c8a80" font-family="monospace" font-size="16">/tools</text>
+<path d="M654 194h23m-10-10 10 10-10 10" stroke="#ffc94d" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg>
