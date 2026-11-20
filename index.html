@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050a0e">
+  <meta name="description" content="hkx / asdasas1212 的个人主页。机器人视觉、视觉语言模型与室内导航：从感知到理解，再到行动。">
+  <meta property="og:title" content="hkx — See. Think. Move.">
+  <meta property="og:description" content="Robotics · Vision-Language Models · Visual Navigation">
+  <meta property="og:type" content="website">
+  <title>hkx / asdasas1212 — See. Think. Move.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23050a0e'/%3E%3Cpath d='M17 26V17h9m12 0h9v9m0 12v9h-9m-12 0h-9v-9' fill='none' stroke='%233df5a7' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='7' fill='%2334d1ff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#050a0e; --panel:#0b141a; --text:#eaf4f0; --muted:#a4bcb3;
+      --mint:#3df5a7; --cyan:#34d1ff; --purple:#a78bfa; --line:#24383b;
+      --sans:"Space Grotesk",system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+      --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+      --gradient:linear-gradient(100deg,var(--mint),var(--cyan) 48%,var(--purple) 80%,var(--mint));
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:100px; }
+    body { margin:0; background:var(--bg); color:var(--text); font:16px/1.75 var(--sans); -webkit-font-smoothing:antialiased; }
+    ::selection { background:#3df5a73b; color:#fff; }
+    a { color:inherit; text-decoration:none; }
+    button { font:inherit; color:inherit; cursor:pointer; }
+    button, a { -webkit-tap-highlight-color:transparent; }
+    a:focus-visible,button:focus-visible { outline:2px solid var(--mint); outline-offset:6px; }
+    button:disabled { cursor:default; }
+    .skip { position:fixed; top:10px; left:12px; z-index:100; padding:10px 18px; background:var(--mint); color:var(--bg); transform:translateY(-150%); }
+    .skip:focus { transform:none; }
+    .wrap { width:min(1160px,calc(100% - 64px)); margin-inline:auto; }
+    .progress { position:fixed; top:0; left:0; width:100%; height:2px; z-index:60; transform:scaleX(0); transform-origin:left; background:var(--gradient); }
+    .nav { position:fixed; top:0; inset-inline:0; z-index:50; border-bottom:1px solid transparent; transition:background .3s,border-color .3s; }
+    .nav.scrolled { background:#050a0ee8; border-color:#ffffff0d; backdrop-filter:blur(16px); }
+    .nav-inner { height:78px; display:flex; justify-content:space-between; align-items:center; gap:20px; }
+    .brand { display:flex; align-items:center; gap:12px; font-size:19px; font-weight:600; min-height:44px; }
+    .brand span:last-child { color:var(--muted); font-size:13px; font-family:var(--mono); font-weight:400; }
+    .brand-icon { width:26px; height:26px; display:grid; place-items:center; border:1px solid var(--mint); border-radius:7px; box-shadow:0 0 18px #3df5a71f; }
+    .brand-icon::after { content:""; width:10px; height:10px; border-radius:2px; background:var(--gradient); }
+    .nav-links { display:flex; gap:28px; align-items:center; }
+    .nav-links a { color:var(--muted); font-size:14px; min-height:44px; display:flex; align-items:center; }
+    .nav-links a:hover,.nav-links a.active { color:var(--mint); }
+    .nav-actions { display:flex; align-items:center; gap:12px; }
+    .motion-btn { border:0; background:transparent; color:var(--muted); font-size:12px; padding:10px 4px; min-height:44px; }
+    .github-btn { display:inline-flex; align-items:center; gap:9px; border:1px solid #ffffff20; border-radius:999px; padding:9px 16px; background:#ffffff04; font-size:13px; min-height:44px; }
+    .github-btn svg { width:17px; height:17px; }
+    .github-btn:hover { border-color:var(--mint); box-shadow:0 0 22px #3df5a712; }
+    .hero { min-height:850px; min-height:100svh; position:relative; display:grid; place-items:center; text-align:center; overflow:hidden; isolation:isolate; padding:140px 0 105px; }
+    #heroCanvas { position:absolute; inset:0; width:100%; height:100%; z-index:-2; }
+    .aurora { position:absolute; inset:0; z-index:-3; overflow:hidden; opacity:.7; }
+    .aurora i { position:absolute; width:55vw; height:55vw; border-radius:50%; filter:blur(65px); animation:float 19s ease-in-out infinite; }
+    .aurora i:nth-child(1) { left:-25vw; top:-22vw; background:radial-gradient(circle,#3df5a742,transparent 65%); }
+    .aurora i:nth-child(2) { right:-22vw; top:4vw; background:radial-gradient(circle,#34d1ff30,transparent 65%); animation-delay:-6s; }
+    .aurora i:nth-child(3) { left:24vw; bottom:-40vw; background:radial-gradient(circle,#a78bfa28,transparent 65%); animation-delay:-12s; }
+    @keyframes float { 0%,100% { transform:translate(0,0) scale(1); } 40% { transform:translate(4vw,3vw) scale(1.1); } 75% { transform:translate(-2vw,5vw) scale(.95); } }
+    .hero::after { content:""; position:absolute; inset:0; z-index:-1; background:radial-gradient(ellipse 55% 48% at 50% 44%,#050a0ed9 30%,transparent 80%),linear-gradient(transparent 75%,var(--bg)); pointer-events:none; }
+    .hero-content { position:relative; width:min(1100px,calc(100% - 40px)); }
+    .identity { display:inline-flex; align-items:center; gap:10px; padding:8px 17px; border:1px solid #ffffff19; border-radius:999px; background:#ffffff04; backdrop-filter:blur(6px); font-size:14px; color:var(--muted); }
+    .identity b { color:var(--text); font-weight:500; }
+    .dot { display:inline-block; width:6px; height:6px; background:var(--mint); border-radius:50%; box-shadow:0 0 12px #3df5a76b; }
+    h1 { margin:30px 0 18px; font-size:clamp(52px,8.4vw,112px); line-height:1.06; letter-spacing:-.065em; font-weight:600; white-space:nowrap; }
+    .gradient { color:var(--mint); background:var(--gradient); background-size:200% 100%; background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    h1.gradient { animation:shimmer 10s linear infinite; filter:drop-shadow(0 0 28px #3df5a718); }
+    @keyframes shimmer { to { background-position:-200% 0; } }
+    .hero-sub { font-size:clamp(17px,2.1vw,26px); color:#c2d6cc; margin:0; letter-spacing:-.02em; }
+    .hero-cn { margin:13px 0 0; font-size:15px; color:var(--muted); }
+    .hero-terminal { max-width:740px; min-height:62px; margin:32px auto 0; padding:17px 22px; display:flex; align-items:center; text-align:left; gap:15px; border:1px solid #ffffff18; border-radius:13px; background:#081116c9; box-shadow:0 15px 40px #0003; font:14px/1.8 var(--mono); }
+    .prompt { color:var(--mint); }
+    .typed { overflow-wrap:anywhere; }
+    .caret { display:inline-block; width:7px; height:15px; background:var(--mint); margin-left:3px; vertical-align:-2px; animation:blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity:0; } }
+    .hero-buttons { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:30px; }
+    .btn { min-height:48px; padding:10px 23px; display:inline-flex; align-items:center; justify-content:center; gap:10px; border:1px solid #ffffff21; border-radius:999px; background:#ffffff04; font-size:14px; transition:transform .2s,border-color .2s,box-shadow .2s; }
+    .btn:hover { transform:translateY(-2px); border-color:var(--mint); }
+    .btn-primary { background:var(--gradient); color:#05130e; font-weight:600; border:0; box-shadow:0 7px 32px #3df5a71a; }
+    .scroll-hint { position:absolute; bottom:32px; left:calc(50% - 12px); width:24px; height:39px; border:1px solid #ffffff2b; border-radius:20px; }
+    .scroll-hint::after { content:""; position:absolute; top:8px; left:10px; width:3px; height:7px; background:var(--mint); border-radius:3px; animation:wheel 2s ease infinite; }
+    @keyframes wheel { 0% { opacity:0; transform:translateY(0); } 30% { opacity:1; } 100% { opacity:0; transform:translateY(13px); } }
+    .section { padding:105px 0; }
+    .section-top { display:flex; justify-content:space-between; align-items:end; gap:30px; margin-bottom:34px; }
+    h2 { margin:0 0 14px; font-size:clamp(28px,3.3vw,42px); line-height:1.2; letter-spacing:-.04em; font-weight:500; }
+    .section-copy { margin:0; color:var(--muted); max-width:660px; font-size:15px; }
+    .section-link { color:var(--mint); font-size:13px; white-space:nowrap; padding:10px 0; }
+    .section-link:hover { text-decoration:underline; text-underline-offset:5px; }
+    .demo { border:1px solid var(--line); border-radius:21px; background:linear-gradient(140deg,#0d181d,#091115); overflow:hidden; }
+    .demo-controls { display:flex; justify-content:space-between; align-items:center; gap:15px; padding:14px 20px; border-bottom:1px solid #ffffff0b; }
+    .tabs { display:flex; gap:5px; }
+    .tab { border:1px solid transparent; border-radius:999px; background:transparent; padding:8px 15px; color:var(--muted); font-size:13px; min-height:42px; display:flex; align-items:center; gap:8px; }
+    .tab .dot { width:5px; height:5px; background:#587167; box-shadow:none; }
+    .tab[aria-selected="true"] { color:var(--text); background:#ffffff06; border-color:#ffffff16; }
+    .tab[aria-selected="true"] .dot { background:var(--mint); box-shadow:0 0 8px #3df5a780; }
+    .replay { background:transparent; border:1px solid #ffffff1a; border-radius:8px; font:12px var(--mono); color:var(--muted); padding:10px 13px; min-height:40px; }
+    .replay:hover { border-color:var(--mint); color:var(--text); }
+    .demo-body { display:grid; grid-template-columns:1.18fr 1fr; }
+    .scene-wrap { position:relative; padding:20px; display:flex; align-items:center; justify-content:center; background:radial-gradient(ellipse at center,#153d3024,transparent 80%); border-right:1px solid #ffffff0b; }
+    .scene { width:100%; max-height:460px; display:block; border-radius:10px; background:#071014; }
+    .scene text { font-family:var(--mono); }
+    .scene .detection { opacity:0; transition:opacity .4s; }
+    .scene .detection.show { opacity:1; }
+    .scene .goal { opacity:0; transition:opacity .4s; }
+    .scene .goal.show { opacity:1; }
+    .scene .goal-ring { transform-box:fill-box; transform-origin:center; animation:ring 2s ease-out infinite; }
+    @keyframes ring { from { transform:scale(.7); opacity:.9; } to { transform:scale(1.7); opacity:0; } }
+    .route { fill:none; stroke:var(--mint); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; opacity:0; stroke-dasharray:1000; stroke-dashoffset:1000; }
+    .route.show { opacity:1; stroke-dashoffset:0; transition:stroke-dashoffset 1.5s ease; }
+    .scene-scan { opacity:0; pointer-events:none; }
+    .scene-scan.running { opacity:1; animation:scan 2.2s linear infinite; }
+    @keyframes scan { from { transform:translateY(-100px); } to { transform:translateY(450px); } }
+    .terminal { min-width:0; display:flex; flex-direction:column; min-height:430px; }
+    .term-head { height:48px; display:flex; align-items:center; gap:7px; padding:0 20px; border-bottom:1px solid #ffffff09; font:11px var(--mono); color:#91aa9f; }
+    .term-dot { height:7px; width:7px; border-radius:50%; background:#ff6d7866; }
+    .term-dot:nth-child(2) { background:#ffc94d66; }
+    .term-dot:nth-child(3) { background:#3df5a766; margin-right:9px; }
+    .term-content { padding:24px; flex:1; font:12px/1.9 var(--mono); }
+    .term-label { color:#7c9b8e; font-size:10px; display:block; margin-bottom:5px; }
+    .term-prompt { margin:0 0 22px; color:#dce9e2; font:14px/1.7 var(--sans); }
+    .term-output { white-space:pre-wrap; overflow-wrap:anywhere; min-height:145px; margin:0; color:#b6c9c0; font:12px/1.95 var(--mono); }
+    .term-output .token { color:var(--mint); }
+    .term-output .coord { color:var(--cyan); }
+    .term-output .action { color:var(--purple); }
+    .term-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid #ffffff0b; padding:12px 20px; color:#8eab9d; font:10px var(--mono); }
+    .status { display:flex; align-items:center; gap:8px; }
+    .status .dot { width:5px; height:5px; }
+    .demo-note { margin:12px 0 0; color:#8ba599; font-size:12px; }
+    .projects { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .project { position:relative; isolation:isolate; overflow:hidden; display:block; padding:28px 30px; border:1px solid var(--line); border-radius:16px; background:#0a1318; transition:transform .25s,border-color .25s; }
+    .project::before { content:""; position:absolute; inset:0; border-radius:inherit; z-index:-1; background:radial-gradient(340px circle at var(--mx,-900px) var(--my,-900px),#3df5a712,transparent 60%); opacity:0; transition:opacity .3s; }
+    .project:hover { transform:translateY(-4px); border-color:#3df5a75e; }
+    .project:hover::before { opacity:1; }
+    .project-topic { color:var(--mint); font-size:12px; }
+    .project:nth-child(2) .project-topic { color:var(--cyan); }
+    .project:nth-child(3) .project-topic { color:var(--purple); }
+    .project:nth-child(4) .project-topic { color:#ffc94d; }
+    .project h3 { margin:13px 0 10px; font-size:27px; line-height:1.3; font-weight:500; letter-spacing:-.03em; }
+    .project p { color:var(--muted); margin:0 0 25px; font-size:14px; max-width:430px; }
+    .project-bottom { display:flex; justify-content:space-between; align-items:center; font:11px var(--mono); color:#8ba599; }
+    .project-arrow { font:22px var(--sans); color:var(--mint); transition:transform .2s; }
+    .project:hover .project-arrow { transform:translate(3px,-3px); }
+    .learning { margin-top:23px; font-size:13px; color:var(--muted); line-height:2; }
+    .learning a { color:#c6dcd1; border-bottom:1px solid #ffffff2d; }
+    .stack-section { border-top:1px solid #ffffff0b; border-bottom:1px solid #ffffff0b; background:linear-gradient(180deg,#08111680,transparent); }
+    .stack-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:45px; }
+    .stack { padding-top:20px; border-top:1px solid #3df5a743; }
+    .stack:nth-child(2) { border-color:#34d1ff43; }
+    .stack:nth-child(3) { border-color:#a78bfa43; }
+    .stack h3 { margin:0 0 10px; font-size:24px; font-weight:500; letter-spacing:-.02em; }
+    .stack p { color:var(--muted); font-size:14px; margin:0 0 20px; }
+    .tools { display:flex; gap:8px; flex-wrap:wrap; }
+    .tool { border:1px solid #ffffff12; border-radius:7px; padding:4px 10px; font:11px/1.9 var(--mono); color:#c6d8cf; background:#ffffff02; }
+    .about { padding:100px 0; text-align:center; position:relative; overflow:hidden; }
+    .about::before { content:""; position:absolute; width:800px; height:350px; max-width:100%; left:50%; top:30%; transform:translateX(-50%); z-index:-1; background:radial-gradient(ellipse,#3df5a70d,transparent 70%); }
+    .about h2 { font-size:clamp(27px,4vw,46px); }
+    .about p { max-width:620px; margin:20px auto 27px; color:var(--muted); font-size:15px; }
+    footer { border-top:1px solid #ffffff0b; padding:25px 0; font-size:11px; color:#8ca99b; }
+    .footer-inner { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+    .footer-inner a { color:var(--muted); }
+    .js-motion .reveal { opacity:0; transform:translateY(22px); transition:opacity .75s ease var(--delay,0ms),transform .75s cubic-bezier(.2,.7,.2,1) var(--delay,0ms); }
+    .js-motion .reveal.shown { opacity:1; transform:none; }
+    [data-motion="off"] *,[data-motion="off"] *::before,[data-motion="off"] *::after { animation:none!important; transition:none!important; }
+    [data-motion="off"] .reveal { opacity:1; transform:none; }
+    [data-motion="off"] .scene-scan { display:none; }
+    @media(min-width:1500px) { .hero { min-height:900px; } }
+    @media(max-width:980px) {
+      .nav-links { gap:17px; } .brand span:last-child { display:none; }
+      .demo-body { grid-template-columns:1fr; } .scene-wrap { border-right:0; border-bottom:1px solid #ffffff0b; }
+      .scene { max-height:430px; } .terminal { min-height:360px; }
+      .stack-grid { gap:25px; } .term-output { min-height:120px; }
+    }
+    @media(max-width:640px) {
+      .wrap { width:calc(100% - 36px); } .nav-inner { height:66px; gap:10px; } .nav-links { display:none; }
+      .nav-actions { gap:10px; } .github-btn { padding:7px 12px; } .github-btn span { display:none; }
+      .hero { min-height:740px; min-height:100svh; padding:120px 0 110px; }
+      h1 { font-size:clamp(37px,8.3vw,54px); letter-spacing:-.06em; margin:29px 0 21px; }
+      .hero-sub { max-width:330px; margin-inline:auto; font-size:18px; line-height:1.6; }
+      .hero-cn { font-size:13px; margin-top:14px; } .identity { font-size:12px; }
+      .hero-terminal { padding:15px; font-size:11px; min-height:76px; gap:10px; margin-top:27px; }
+      .hero-buttons { margin-top:25px; gap:9px; } .btn { padding:10px 18px; font-size:12px; }
+      .section { padding:72px 0; } .section-top { gap:12px; align-items:start; flex-direction:column; margin-bottom:26px; }
+      .section-copy { font-size:14px; } h2 { line-height:1.35; }
+      .demo-controls { padding:9px; gap:4px; } .tabs { gap:0; }
+      .tab { padding:8px 10px; font-size:11px; gap:6px; } .replay { font-size:10px; padding:8px; }
+      .scene-wrap { padding:9px; } .term-content { padding:20px; } .terminal { min-height:365px; }
+      .term-foot { padding:12px 15px; font-size:9px; } .term-head { padding-inline:16px; }
+      .projects { grid-template-columns:1fr; gap:14px; } .project { padding:25px; } .project h3 { font-size:26px; }
+      .stack-grid { grid-template-columns:1fr; gap:35px; } .stack { padding-top:18px; }
+      .about { padding:75px 0; } .about p { font-size:14px; } .footer-inner { font-size:10px; }
+      .aurora i { width:100vw; height:100vw; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; }
+      *,*::before,*::after { animation:none!important; transition:none!important; }
+      .js-motion .reveal { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">跳到主要内容</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <nav class="nav" id="nav" aria-label="主导航">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="hkx，返回顶部"><span class="brand-icon" aria-hidden="true"></span>hkx <span>/ asdasas1212</span></a>
+      <div class="nav-links">
+        <a href="#loop">感知到行动</a><a href="#projects">公开项目</a><a href="#stack">工具链</a>
+      </div>
+      <div class="nav-actions">
+        <button class="motion-btn" id="motion" type="button" aria-pressed="true">暂停动效</button>
+        <a class="github-btn" href="https://github.com/asdasas1212" aria-label="访问 asdasas1212 的 GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .8a11.5 11.5 0 0 0-3.64 22.4c.58.1.79-.25.79-.56v-2.2c-3.2.7-3.87-1.36-3.87-1.36-.52-1.32-1.28-1.67-1.28-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.34.96.1-.74.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.16 1.18A11 11 0 0 1 12 6.28c.98 0 1.96.13 2.89.39 2.19-1.49 3.15-1.18 3.15-1.18.63 1.58.23 2.75.12 3.04.73.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.26 5.68.42.36.78 1.06.78 2.14v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .8Z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+  <header class="hero" id="top">
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="hero-content">
+      <div class="identity reveal"><span class="dot" aria-hidden="true"></span><b>hkx</b><span>/</span><span>@asdasas1212</span></div>
+      <h1 class="gradient reveal">See. Think. Move.</h1>
+      <p class="hero-sub reveal">Robotics · Vision-Language Models · Navigation</p>
+      <p class="hero-cn reveal">让机器人看懂世界，再走向世界。</p>
+      <div class="hero-terminal reveal" aria-label="机器人导航指令动画">
+        <span class="prompt" aria-hidden="true">&gt;</span>
+        <span><span class="typed" id="typer">robot.navigate("understand the world")</span><span class="caret" aria-hidden="true"></span></span>
+      </div>
+      <div class="hero-buttons reveal">
+        <a class="btn btn-primary" href="#projects">浏览公开项目 <span aria-hidden="true">↗</span></a>
+        <a class="btn" href="#loop">看看感知如何变成行动</a>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#loop" aria-label="向下查看感知到行动演示"></a>
+  </header>
+  <main id="main">
+    <section class="section" id="loop">
+      <div class="wrap">
+        <div class="section-top reveal">
+          <div>
+            <h2>一句目标，如何变成一条路径。</h2>
+            <p class="section-copy">我关注视觉、语言与空间之间的连接。切换下面的步骤，看看感知结果怎样成为可以执行的行动。</p>
+          </div>
+        </div>
+        <div class="demo reveal">
+          <div class="demo-controls">
+            <div class="tabs" role="tablist" aria-label="导航演示步骤">
+              <button class="tab" id="tab-0" role="tab" aria-selected="true" aria-controls="demo-panel" type="button"><span class="dot" aria-hidden="true"></span>感知场景</button>
+              <button class="tab" id="tab-1" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" type="button"><span class="dot" aria-hidden="true"></span>理解目标</button>
+              <button class="tab" id="tab-2" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" type="button"><span class="dot" aria-hidden="true"></span>规划行动</button>
+            </div>
+            <button class="replay" id="replay" type="button" aria-label="重播当前步骤">↻ 重播</button>
+          </div>
+          <div class="demo-body" id="demo-panel" role="tabpanel" aria-labelledby="tab-0">
+            <div class="scene-wrap">
+              <svg class="scene" viewBox="0 0 640 460" role="img" aria-labelledby="scene-title scene-desc">
+                <title id="scene-title">室内导航交互示意</title>
+                <desc id="scene-desc">一个包含沙发、桌子、椅子和杯子的俯视房间。机器人从左下角出发，绕过家具，走向右上角的杯子。</desc>
+                <defs>
+                  <pattern id="floor" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#ffffff05"/></pattern>
+                  <radialGradient id="robot-glow"><stop stop-color="#3df5a7" stop-opacity=".25"/><stop offset="1" stop-color="#3df5a7" stop-opacity="0"/></radialGradient>
+                  <linearGradient id="scan-grad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#3df5a7" stop-opacity="0"/><stop offset="1" stop-color="#3df5a7" stop-opacity=".14"/></linearGradient>
+                  <clipPath id="room-clip"><rect x="32" y="35" width="576" height="390" rx="10"/></clipPath>
+                </defs>
+                <rect x="32" y="35" width="576" height="390" rx="10" fill="#0c181d" stroke="#344d49" stroke-width="2"/>
+                <rect x="34" y="37" width="572" height="386" fill="url(#floor)"/>
+                <path d="M32 348v45m0-45h45" stroke="#749389" stroke-width="2" fill="none"/>
+                <path d="M32 393a45 45 0 0 0 45-45" fill="none" stroke="#344d49" stroke-dasharray="3 4"/>
+                <g fill="#172c30" stroke="#35514f" stroke-width="1.5">
+                  <rect x="76" y="80" width="174" height="82" rx="11"/><rect x="67" y="90" width="22" height="75" rx="7"/><rect x="237" y="90" width="22" height="75" rx="7"/>
+                  <path d="M91 117h143M164 83v75" fill="none" stroke="#2a4443"/>
+                  <rect x="310" y="110" width="95" height="120" rx="13" fill="#243734"/>
+                  <rect x="434" y="171" width="69" height="67" rx="10"/><path d="M444 183h48v43" fill="none"/>
+                  <rect x="475" y="60" width="97" height="78" rx="8" fill="#172c30"/>
+                </g>
+                <circle cx="111" cy="291" r="29" fill="#1a3530" stroke="#315b4b"/>
+                <path d="m98 297 13-27 12 27m-12-25v41m-19-24 19 10 20-10" fill="none" stroke="#527a60" stroke-width="2"/>
+                <g fill="#91a99e" font-size="10"><text x="146" y="145">sofa</text><text x="337" y="178">table</text><text x="451" y="214">chair</text><text x="83" y="335">plant</text></g>
+                <g fill="#d0dbcf" stroke="#99b3a4"><ellipse cx="526" cy="109" rx="12" ry="5"/><path d="M514 107v-18h24v18" fill="#b7cec1"/><ellipse cx="526" cy="89" rx="12" ry="4"/><path d="M538 93c13-3 13 12 0 10" fill="none" stroke-width="3"/></g>
+                <g class="detection" id="detect-sofa"><rect x="61" y="70" width="205" height="103" rx="4" fill="#3df5a709" stroke="#3df5a7" stroke-width="1.5"/><rect x="61" y="54" width="43" height="16" rx="2" fill="#3df5a7"/><text x="67" y="66" fill="#06120d" font-size="10">sofa</text></g>
+                <g class="detection" id="detect-table"><rect x="300" y="100" width="115" height="140" rx="4" fill="#34d1ff09" stroke="#34d1ff" stroke-width="1.5"/><rect x="300" y="84" width="48" height="16" rx="2" fill="#34d1ff"/><text x="306" y="96" fill="#06120d" font-size="10">table</text></g>
+                <g class="detection" id="detect-cup"><rect x="498" y="75" width="58" height="49" rx="4" fill="#a78bfa09" stroke="#a78bfa" stroke-width="1.5"/><rect x="498" y="59" width="38" height="16" rx="2" fill="#a78bfa"/><text x="504" y="71" fill="#06120d" font-size="10">cup</text></g>
+                <path class="route" id="route" pathLength="1000" d="M165 355H230V270H550V153L526 109"/>
+                <g class="goal" id="goal"><circle class="goal-ring" cx="526" cy="109" r="29" fill="none" stroke="#3df5a7"/><circle cx="526" cy="109" r="20" fill="none" stroke="#3df5a7" stroke-dasharray="3 4"/><text x="481" y="157" fill="#3df5a7" font-size="10">target grounded</text></g>
+                <g id="robot" transform="translate(165 355)"><circle r="49" fill="url(#robot-glow)"/><circle r="17" fill="#143e30" stroke="#3df5a7" stroke-width="2"/><path d="m-7 5 7-14 7 14-7-3Z" fill="#3df5a7"/><circle r="24" fill="none" stroke="#3df5a7" stroke-opacity=".17"/></g>
+                <g clip-path="url(#room-clip)"><rect class="scene-scan" id="scene-scan" x="32" y="0" width="576" height="90" fill="url(#scan-grad)"/></g>
+                <text x="44" y="448" fill="#7f9c8f" font-size="9">indoor navigation · illustrative replay</text>
+                <text x="495" y="448" fill="#7f9c8f" font-size="9">x →   y ↑</text>
+              </svg>
+            </div>
+            <div class="terminal">
+              <div class="term-head"><i class="term-dot"></i><i class="term-dot"></i><i class="term-dot"></i><span>robot · perception_to_action()</span></div>
+              <div class="term-content">
+                <span class="term-label">prompt</span>
+                <p class="term-prompt" id="demo-prompt">观察房间，找到可以理解的物体。</p>
+                <span class="term-label">response</span>
+                <pre class="term-output" id="demo-output" aria-label="导航步骤的输出"><span class="token">ready</span>
+选择一个步骤，或等待演示开始。</pre>
+              </div>
+              <div class="term-foot"><span class="status"><i class="dot" aria-hidden="true"></i><span id="demo-status" role="status">ready</span></span><span id="demo-meta">perception → action</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="demo-note">交互示意：使用预设场景与输出，展示我的研究兴趣和技术路径。</p>
+      </div>
+    </section>
+    <section class="section" id="projects">
+      <div class="wrap">
+        <div class="section-top reveal"><div><h2>代码、实验，还有公开笔记。</h2><p class="section-copy">沿着视觉与语言这条线，把学到的东西写下来，也做出来。</p></div><a class="section-link" href="https://github.com/asdasas1212?tab=repositories&amp;type=source">在 GitHub 查看更多 ↗</a></div>
+        <div class="projects">
+          <a class="project reveal" href="https://github.com/asdasas1212/kx-public-notes"><span class="project-topic">AI、数据与机器人</span><h3>kx-public-notes</h3><p>公开的学习文章与技术笔记，记录从阅读到动手实践的过程。</p><div class="project-bottom"><span>notes / learning in public</span><span class="project-arrow" aria-hidden="true">↗</span></div></a>
+          <a class="project reveal" href="https://github.com/asdasas1212/CNN1"><span class="project-topic">计算机视觉</span><h3>CNN1</h3><p>以 Python 开展图像识别实验，从图像与特征开始理解视觉。</p><div class="project-bottom"><span>vision / Python</span><span class="project-arrow" aria-hidden="true">↗</span></div></a>
+          <a class="project reveal" href="https://github.com/asdasas1212/LLM"><span class="project-topic">大语言模型</span><h3>LLM</h3><p>Play hard. Practice harder. 围绕大语言模型，保持练习与探索。</p><div class="project-bottom"><span>language / experiments</span><span class="project-arrow" aria-hidden="true">↗</span></div></a>
+          <a class="project reveal" href="https://github.com/asdasas1212/quote-skill"><span class="project-topic">工具与技能</span><h3>quote-skill</h3><p>一个公开的 JavaScript skill 项目，把想法写成可以运行的代码。</p><div class="project-bottom"><span>tools / JavaScript</span><span class="project-arrow" aria-hidden="true">↗</span></div></a>
+        </div>
+        <p class="learning reveal">也在学习这些开源项目：<a href="https://github.com/asdasas1212/minimind">minimind</a>、<a href="https://github.com/asdasas1212/unsloth">unsloth</a> 和 <a href="https://github.com/asdasas1212/code-animation-prompts">code-animation-prompts</a>。这些仓库为 fork，原作者信息保留在各仓库中。</p>
+      </div>
+    </section>
+    <section class="section stack-section" id="stack">
+      <div class="wrap">
+        <div class="section-top reveal"><div><h2>把不同层的工具，连接起来。</h2><p class="section-copy">正在使用和学习的工具，覆盖感知、理解与机器人执行。</p></div></div>
+        <div class="stack-grid">
+          <div class="stack reveal"><h3>感知世界</h3><p>从图像、特征与点云中提取环境信息。</p><div class="tools"><span class="tool">OpenCV</span><span class="tool">PyTorch</span><span class="tool">YOLO</span><span class="tool">PCL</span><span class="tool">CUDA</span></div></div>
+          <div class="stack reveal"><h3>理解目标</h3><p>连接语言、语义与空间，定位下一步。</p><div class="tools"><span class="tool">VLM</span><span class="tool">Nav2</span><span class="tool">SLAM</span><span class="tool">Python</span><span class="tool">C++</span></div></div>
+          <div class="stack reveal"><h3>执行行动</h3><p>让模块进入同一个可靠的系统。</p><div class="tools"><span class="tool">ROS2 Humble</span><span class="tool">Linux</span><span class="tool">Docker</span><span class="tool">CMake</span><span class="tool">Git</span><span class="tool">Shell</span></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="about">
+      <div class="wrap reveal"><h2>让机器人，听懂更大的世界。</h2><p>我是 hkx。关注机器人视觉、视觉语言模型与室内导航，希望有一天，「去厨房拿个杯子」能成为机器人真正理解的一句话。</p><a class="btn" href="https://github.com/asdasas1212">在 GitHub 继续探索 <span aria-hidden="true">↗</span></a></div>
+    </section>
+  </main>
+  <footer><div class="wrap footer-inner"><span>hkx / asdasas1212</span><span>See the world. Understand the world. Move through it.</span><a href="#top">返回顶部 ↑</a></div></footer>
+  <script>
+    (() => {
+      "use strict";
+      const $ = s => document.querySelector(s);
+      const $$ = s => Array.from(document.querySelectorAll(s));
+      const media = matchMedia("(prefers-reduced-motion: reduce)");
+      let motionOn = !media.matches, typerRun = 0, demoRun = 0, selected = 0, demoStarted = false;
+      const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+      document.documentElement.dataset.motion = motionOn ? "on" : "off";
+      if (motionOn) document.documentElement.classList.add("js-motion");
+
+      // Reveal once. Content stays visible when JavaScript or motion is disabled.
+      const reveals = $$(".reveal");
+      const revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add("shown"); revealObserver.unobserve(e.target); }
+        });
+      }, { threshold:.12 });
+      reveals.forEach((el, i) => {
+        el.style.setProperty("--delay", `${(i % 4) * 65}ms`);
+        revealObserver.observe(el);
+      });
+      function scrollState() {
+        const e = document.documentElement;
+        $("#progress").style.transform = `scaleX(${e.scrollTop / Math.max(1,e.scrollHeight-e.clientHeight)})`;
+        $("#nav").classList.toggle("scrolled",e.scrollTop > 35);
+      }
+      addEventListener("scroll",scrollState,{passive:true}); scrollState();
+      const sections = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) $$(".nav-links a").forEach(a => a.classList.toggle("active",a.hash === "#" + e.target.id));
+        });
+      },{rootMargin:"-15% 0px -60% 0px"});
+      $$("main > section[id]").forEach(el => sections.observe(el));
+      $$(".project").forEach(el => el.addEventListener("pointermove",e => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--mx",e.clientX-r.left+"px");
+        el.style.setProperty("--my",e.clientY-r.top+"px");
+      },{passive:true}));
+
+      // Canvas 2D: background detections and a pointer-reactive dot grid.
+      const cv = $("#heroCanvas"), ctx = cv.getContext("2d");
+      const colors = ["#3df5a7","#34d1ff","#a78bfa"];
+      let width=0,height=0,raf=0,inView=true,lastSpawn=0,items=[];
+      const pointer={x:-9999,y:-9999};
+      function rgba(hex,a) {
+        const n = parseInt(hex.slice(1),16);
+        return `rgba(${n>>16},${n>>8&255},${n&255},${a})`;
+      }
+      function sizeCanvas() {
+        width=cv.clientWidth; height=cv.clientHeight;
+        const ratio=Math.min(2,devicePixelRatio||1);
+        cv.width=Math.round(width*ratio); cv.height=Math.round(height*ratio);
+        ctx.setTransform(ratio,0,0,ratio,0,0); items=[];
+        renderCanvas(performance.now()); syncCanvas();
+      }
+      function renderCanvas(t) {
+        ctx.clearRect(0,0,width,height);
+        const gap=32;
+        for(let x=16;x<width;x+=gap) for(let y=16;y<height;y+=gap) {
+          const k=motionOn ? Math.max(0,1-Math.hypot(x-pointer.x,y-pointer.y)/170) : 0;
+          ctx.fillStyle=rgba("#3df5a7",.055+k*.45);
+          ctx.beginPath();ctx.arc(x,y,0.8+k*1.4,0,Math.PI*2);ctx.fill();
+        }
+        if(motionOn && t-lastSpawn>750 && items.length<7) {
+          const w=65+Math.random()*105,h=55+Math.random()*110;
+          const left=Math.random()<.5;
+          const x=left ? 15+Math.random()*Math.max(1,width*.18-w) : width*.82+Math.random()*Math.max(1,width*.18-w-10);
+          items.push({x,y:100+Math.random()*Math.max(1,height-220-h),w,h,born:t,life:4300+Math.random()*1200,color:colors[Math.floor(Math.random()*3)],label:["scene","goal","robot","<VLM>","path","landmark"][Math.floor(Math.random()*6)]});
+          lastSpawn=t;
+        }
+        items=items.filter(it=>t-it.born<it.life);
+        items.forEach(it=>{
+          const age=t-it.born;
+          const a=Math.max(0,Math.min(age/600,(it.life-age)/900,1))*.6;
+          const p=1-Math.pow(1-Math.min(1,age/700),3);
+          ctx.strokeStyle=rgba(it.color,a*.3);ctx.lineWidth=1;ctx.setLineDash([3,5]);
+          ctx.strokeRect(it.x,it.y,it.w*p,it.h*p);ctx.setLineDash([]);
+          ctx.strokeStyle=rgba(it.color,a);ctx.lineWidth=1.7;
+          const c=13*p,x=it.x,y=it.y,w=it.w,h=it.h;
+          ctx.beginPath();
+          ctx.moveTo(x+c,y);ctx.lineTo(x,y);ctx.lineTo(x,y+c);
+          ctx.moveTo(x+w-c,y);ctx.lineTo(x+w,y);ctx.lineTo(x+w,y+c);
+          ctx.moveTo(x,y+h-c);ctx.lineTo(x,y+h);ctx.lineTo(x+c,y+h);
+          ctx.moveTo(x+w-c,y+h);ctx.lineTo(x+w,y+h);ctx.lineTo(x+w,y+h-c);
+          ctx.stroke();
+          ctx.font="11px monospace";
+          ctx.fillStyle=rgba(it.color,a);ctx.fillRect(x,y-17,ctx.measureText(it.label).width+10,16);
+          ctx.fillStyle=rgba("#050a0e",Math.min(1,a*2));ctx.fillText(it.label,x+5,y-5);
+          ctx.fillStyle=rgba(it.color,a*.7);
+          ctx.font="9px monospace";
+          ctx.fillText(`<${Math.round(x/width*1000)}><${Math.round(y/height*1000)}>`,x,y+h+14);
+        });
+      }
+      function frame(t) { raf=0; renderCanvas(t); syncCanvas(); }
+      function syncCanvas() {
+        if(motionOn && inView && !document.hidden) { if(!raf) raf=requestAnimationFrame(frame); }
+        else if(raf) { cancelAnimationFrame(raf);raf=0; }
+      }
+      const canvasObserver=new IntersectionObserver(es=>{inView=es[0].isIntersecting;syncCanvas();});
+      canvasObserver.observe(cv);
+      new ResizeObserver(sizeCanvas).observe(cv);
+      document.addEventListener("visibilitychange",syncCanvas);
+      $(".hero").addEventListener("pointermove",e=>{
+        const r=cv.getBoundingClientRect();pointer.x=e.clientX-r.left;pointer.y=e.clientY-r.top;
+      },{passive:true});
+      $(".hero").addEventListener("pointerleave",()=>{pointer.x=pointer.y=-9999;});
+      sizeCanvas();
+
+      async function typeHero() {
+        const id=++typerRun;
+        const phrases=['robot.navigate("understand the world")','vision.ground("the cup on the right")','planner.connect(perception, action)'];
+        if(!motionOn) { $("#typer").textContent=phrases[0];return; }
+        let i=0;
+        while(id===typerRun && motionOn) {
+          const text=phrases[i++%phrases.length];
+          $("#typer").textContent=text;
+          await sleep(2400);if(id!==typerRun)return;
+          for(let k=text.length;k>=0;k--) {
+            if(id!==typerRun)return;
+            $("#typer").textContent=text.slice(0,k);await sleep(17);
+          }
+          const next=phrases[i%phrases.length];
+          for(let k=1;k<=next.length;k++) {
+            if(id!==typerRun)return;
+            $("#typer").textContent=next.slice(0,k);await sleep(39);
+          }
+        }
+      }
+      // Illustrative replay: every text step and its visual result share a timeline.
+      const modes=[
+        {prompt:"观察房间，找到可以理解的物体。",meta:"scene → structured observations",steps:[
+          {text:"<ref>sofa</ref><box><95><152><416><376></box>",show:"detect-sofa"},
+          {text:"<ref>table</ref><box><469><217><648><522></box>",show:"detect-table"},
+          {text:"<ref>cup</ref><box><778><163><869><270></box>",show:"detect-cup"}
+        ]},
+        {prompt:"找到右上方桌面上的杯子。",meta:"language → grounded goal",steps:[
+          {text:'query = "右上方桌面上的杯子"'},
+          {text:"<ref>cup</ref><box><778><163><869><270></box>",show:"detect-cup"},
+          {text:"<goal><822><237></goal>",show:"goal"}
+        ]},
+        {prompt:"绕开家具，移动到杯子附近。",meta:"grounded goal → planned action",steps:[
+          {text:"<goal>cup</goal>",show:"detect-cup"},
+          {text:"<plan>avoid furniture; follow free space</plan>",show:"goal"},
+          {text:"<path>robot → corridor → cup</path>",show:"route"},
+          {text:"<action>navigate_to_goal()</action>",move:true}
+        ]}
+      ];
+      async function moveRobot(id,animate) {
+        const path=$("#route"),robot=$("#robot"),length=path.getTotalLength(),start=performance.now();
+        if(!animate) { const p=path.getPointAtLength(length);robot.setAttribute("transform",`translate(${p.x} ${p.y})`);return; }
+        await new Promise(resolve=>{
+          function tick(t) {
+            if(id!==demoRun) { resolve();return; }
+            const p=Math.min(1,(t-start)/2100);
+            const at=path.getPointAtLength(length*p);
+            robot.setAttribute("transform",`translate(${at.x} ${at.y})`);
+            if(p<1)requestAnimationFrame(tick);else resolve();
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+      async function playDemo(index) {
+        const id=++demoRun,animate=motionOn;
+        demoStarted=true;selected=index;
+        const mode=modes[index],output=$("#demo-output");
+        $$(".tab").forEach((b,i)=>{b.setAttribute("aria-selected",String(i===index));b.tabIndex=i===index?0:-1;});
+        $("#demo-panel").setAttribute("aria-labelledby","tab-"+index);
+        $$(".detection,.goal,.route").forEach(el=>el.classList.remove("show"));
+        $("#robot").setAttribute("transform","translate(165 355)");
+        $("#demo-prompt").textContent=mode.prompt;output.replaceChildren();
+        $("#demo-meta").textContent=mode.meta;
+        $("#demo-status").textContent="reading scene…";
+        $("#scene-scan").classList.toggle("running",animate);
+        if(animate)await sleep(550);
+        if(id!==demoRun)return;
+        $("#demo-status").textContent="generating";
+        for(const step of mode.steps) {
+          for(const token of step.text.match(/<[^>]+>|[^<]+/g)||[]) {
+            if(id!==demoRun)return;
+            const span=document.createElement("span");
+            span.textContent=token;
+            span.className=/^<\d+>$/.test(token)?"coord":/^<\/?(action|path|plan)/.test(token)?"action":token.startsWith("<")?"token":"";
+            output.appendChild(span);
+            if(animate)await sleep(token.startsWith("<")?38:70);
+          }
+          output.appendChild(document.createTextNode("\n"));
+          if(id!==demoRun)return;
+          if(step.show)$("#"+step.show).classList.add("show");
+          if(step.move)await moveRobot(id,animate);
+          if(animate)await sleep(330);
+          if(id!==demoRun)return;
+        }
+        $("#scene-scan").classList.remove("running");
+        $("#demo-status").textContent="示意完成";
+      }
+      $$(".tab").forEach((b,i)=>{
+        b.addEventListener("click",()=>playDemo(i));
+        b.addEventListener("keydown",e=>{
+          let next=i;
+          if(e.key==="ArrowRight")next=(i+1)%3;
+          else if(e.key==="ArrowLeft")next=(i+2)%3;
+          else if(e.key==="Home")next=0;
+          else if(e.key==="End")next=2;
+          else return;
+          e.preventDefault();$("#tab-"+next).focus();playDemo(next);
+        });
+      });
+      $("#replay").addEventListener("click",()=>playDemo(selected));
+      const demoObserver=new IntersectionObserver(entries=>{
+        if(entries[0].isIntersecting && !demoStarted) { playDemo(0);demoObserver.disconnect(); }
+      },{threshold:.25});
+      demoObserver.observe($(".demo"));
+
+      function setMotion(on) {
+        motionOn=on;
+        document.documentElement.dataset.motion=on?"on":"off";
+        $("#motion").textContent=on?"暂停动效":"开启动效";
+        $("#motion").setAttribute("aria-pressed",String(on));
+        if(!on) { items=[];renderCanvas(performance.now()); }
+        syncCanvas();typeHero();
+        if(demoStarted)playDemo(selected);
+      }
+      $("#motion").addEventListener("click",()=>setMotion(!motionOn));
+      media.addEventListener("change",e=>setMotion(!e.matches));
+      setMotion(motionOn);
+    })();
+  </script>
+</body>
+</html>
