@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="440" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">hkx / asdasas1212 — See. Think. Move.</title>
+  <desc id="desc">Robotics, vision-language models and navigation. A dark dot grid, soft aurora, animated detection boxes, gradient headline and typing terminal.</desc>
+  <defs>
+    <linearGradient id="type" x1="0" x2="1"><stop class="color-a" stop-color="#3df5a7"/><stop class="color-b" offset=".5" stop-color="#34d1ff"/><stop class="color-c" offset="1" stop-color="#a78bfa"/></linearGradient>
+    <radialGradient id="green"><stop stop-color="#3df5a7" stop-opacity=".16"/><stop offset="1" stop-color="#3df5a7" stop-opacity="0"/></radialGradient>
+    <radialGradient id="blue"><stop stop-color="#34d1ff" stop-opacity=".13"/><stop offset="1" stop-color="#34d1ff" stop-opacity="0"/></radialGradient>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="14" cy="14" r=".8" fill="#34574d" opacity=".6"/></pattern>
+    <clipPath id="round"><rect width="1000" height="440" rx="20"/></clipPath>
+    <clipPath id="typing"><rect class="typed-clip" x="264" y="302" width="410" height="32"/></clipPath>
+  </defs>
+  <style>
+    text{font-family:"Trebuchet MS",Arial,sans-serif}
+    .mono{font-family:Menlo,Consolas,monospace}
+    .color-a{animation:tint-a 9s linear infinite}
+    .color-b{animation:tint-b 9s linear infinite}
+    .color-c{animation:tint-c 9s linear infinite}
+    .aurora{animation:drift 16s ease-in-out infinite}
+    .detect{animation:detect 7s ease-in-out infinite}
+    .d2{animation-delay:-2s}.d3{animation-delay:-4s}.d4{animation-delay:-5.5s}
+    .typed-clip{animation:typing 8s steps(40,end) infinite}
+    .cursor{animation:cursor 8s steps(40,end) infinite}
+    .blink{animation:blink 1s steps(1,end) infinite}
+    @keyframes tint-a{0%,100%{stop-color:#3df5a7}33%{stop-color:#34d1ff}66%{stop-color:#a78bfa}}
+    @keyframes tint-b{0%,100%{stop-color:#34d1ff}33%{stop-color:#a78bfa}66%{stop-color:#3df5a7}}
+    @keyframes tint-c{0%,100%{stop-color:#a78bfa}33%{stop-color:#3df5a7}66%{stop-color:#34d1ff}}
+    @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(24px,14px)}}
+    @keyframes detect{0%,8%,100%{opacity:0}20%,65%{opacity:.65}85%{opacity:0}}
+    @keyframes typing{0%,10%{width:410px}20%{width:0px}65%,100%{width:410px}}
+    @keyframes cursor{0%,10%{transform:translateX(353px)}20%{transform:translateX(0)}65%,100%{transform:translateX(353px)}}
+    @keyframes blink{50%{opacity:0}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important}.detect{opacity:.45}}
+  </style>
+  <g clip-path="url(#round)">
+    <rect width="1000" height="440" fill="#050a0e"/>
+    <g class="aurora"><ellipse cx="100" cy="40" rx="470" ry="350" fill="url(#green)"/><ellipse cx="950" cy="190" rx="450" ry="350" fill="url(#blue)"/></g>
+    <rect width="1000" height="440" fill="url(#dots)"/>
+    <g class="detect" stroke="#3df5a7" fill="none"><rect x="38" y="88" width="119" height="94" stroke-dasharray="3 4" opacity=".4"/><path d="M38 102V88h14m91 0h14v14m0 66v14h-14m-91 0H38v-14" stroke-width="2"/><rect x="38" y="71" width="49" height="16" fill="#3df5a7" stroke="none"/><text class="mono" x="43" y="83" font-size="10" fill="#050a0e" stroke="none">scene</text></g>
+    <g class="detect d2" stroke="#34d1ff" fill="none"><rect x="827" y="71" width="129" height="118" stroke-dasharray="3 4" opacity=".4"/><path d="M827 85V71h14m101 0h14v14m0 90v14h-14m-101 0h-14v-14" stroke-width="2"/><rect x="827" y="54" width="41" height="16" fill="#34d1ff" stroke="none"/><text class="mono" x="832" y="66" font-size="10" fill="#050a0e" stroke="none">goal</text></g>
+    <g class="detect d3" stroke="#a78bfa" fill="none"><rect x="73" y="306" width="98" height="77" stroke-dasharray="3 4" opacity=".4"/><path d="M73 320v-14h14m70 0h14v14m0 49v14h-14m-70 0H73v-14" stroke-width="2"/><rect x="73" y="289" width="49" height="16" fill="#a78bfa" stroke="none"/><text class="mono" x="78" y="301" font-size="10" fill="#050a0e" stroke="none">robot</text></g>
+    <g class="detect d4" stroke="#3df5a7" fill="none"><rect x="853" y="301" width="100" height="68" stroke-dasharray="3 4" opacity=".4"/><path d="M853 315v-14h14m72 0h14v14m0 40v14h-14m-72 0h-14v-14" stroke-width="2"/><rect x="853" y="284" width="41" height="16" fill="#3df5a7" stroke="none"/><text class="mono" x="858" y="296" font-size="10" fill="#050a0e" stroke="none">path</text></g>
+    <rect x="354" y="54" width="292" height="37" rx="18" fill="#0d1a1e" stroke="#28403f"/>
+    <circle cx="375" cy="73" r="4" fill="#3df5a7"/>
+    <text x="392" y="79" fill="#d9ece5" font-size="15" font-weight="600">hkx  /  @asdasas1212</text>
+    <text x="500" y="185" text-anchor="middle" fill="url(#type)" font-size="85" font-weight="700" letter-spacing="-3">See. Think. Move.</text>
+    <text x="500" y="249" text-anchor="middle" fill="#b4cdc5" font-size="21">Robotics  /  Vision-Language Models  /  Navigation</text>
+    <rect x="224" y="288" width="552" height="62" rx="12" fill="#071015" stroke="#253e3e"/>
+    <text class="mono" x="244" y="326" fill="#3df5a7" font-size="15">&gt;</text>
+    <text class="mono" x="266" y="326" fill="#d4e8e1" font-size="15" clip-path="url(#typing)">robot.navigate('understand the world')</text>
+    <g class="cursor"><rect class="blink" x="266" y="312" width="7" height="15" fill="#3df5a7"/></g>
+    <text class="mono" x="500" y="402" text-anchor="middle" fill="#7f9f91" font-size="12">perceive  &gt;  understand  &gt;  plan  &gt;  act</text>
+  </g>
+  <rect x=".5" y=".5" width="999" height="439" rx="20" fill="none" stroke="#213d3d"/>
+</svg>
